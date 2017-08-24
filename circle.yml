@@ -9,5 +9,8 @@ test:
   pre:
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
   override:
-    - composer lint-errors
-    - composer tests
+    - >-
+      vendor/bin/phpunit
+      -c phpunit.xml
+      --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml
+      --coverage-html=$CIRCLE_ARTIFACTS/coverage/html
