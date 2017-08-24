@@ -1,5 +1,5 @@
 <?php
-namespace src\Rito;
+namespace Playground\Rito;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
@@ -8,7 +8,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Request;
-use src\Exception as RiotException;
+use Playground\Exception as RiotException;
+use InvalidArgumentException;
 
 class Client
 {
@@ -63,6 +64,15 @@ class Client
     public function getEndpoint()
     {
         return $this->endpoint;
+    }
+
+    /**
+     * Return the Riot API key.
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
     }
 
     /**
