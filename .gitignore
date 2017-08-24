@@ -1,0 +1,10 @@
+# Project files
+/.idea/
+
+# OS files
+*.DS_Store
+
+# Build artifacts
+vendor/
+build/
+.php_cs.cache
