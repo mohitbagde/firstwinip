@@ -1,6 +1,6 @@
 <?php
 
-namespace src;
+namespace Playground;
 
 use GuzzleHttp\Exception\RequestException;
 

@@ -1,4 +1,9 @@
 {
+  "name": "php-playground",
+  "description": "Common classes, clients and code that I like to mess around with",
+  "keywords": ["rito", "mohit", "playground"],
+  "license": "public",
+  "type": "project",
   "require": {
     "guzzlehttp/guzzle": "~6.0",
     "league/container": "2.3",
@@ -9,11 +14,13 @@
     "squizlabs/php_codesniffer": "^2.7"
   },
   "autoload": {
-    "Rito\\": "src/Rito/"
+    "psr-4": {
+      "Playground\\": "src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {
-      "Rito\\Tests\\Unit\\": "tests/Unit/Rito"
+      "Playground\\Tests\\": "tests/"
     }
   },
   "scripts": {

@@ -25,15 +25,13 @@ class ComposerStaticInitb557a35fdf72ca00017366e86a4ead9a
         array (
             'Symfony\\Component\\Yaml\\' => 23,
         ),
-        'R' => 
-        array (
-            'Rito\\Tests\\Unit\\' => 16,
-        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
+            'Playground\\Tests\\' => 17,
+            'Playground\\' => 11,
         ),
         'L' => 
         array (
@@ -71,10 +69,6 @@ class ComposerStaticInitb557a35fdf72ca00017366e86a4ead9a
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Rito\\Tests\\Unit\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests/Unit/Rito',
-        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -86,6 +80,14 @@ class ComposerStaticInitb557a35fdf72ca00017366e86a4ead9a
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Playground\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
+        ),
+        'Playground\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'League\\Container\\' => 
         array (
