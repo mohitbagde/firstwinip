@@ -11,6 +11,6 @@ test:
   override:
     - >-
       vendor/bin/phpunit
-      -c phpunit.xml.dist
+      -c phpunit.xml
       --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml
       --coverage-html=$CIRCLE_ARTIFACTS/coverage/html
