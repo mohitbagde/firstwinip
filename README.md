@@ -1,5 +1,7 @@
 # PHP Plaground
 
+## CircleCI Status : [![CircleCI](https://circleci.com/gh/mohitbagde/php-playground.svg?style=svg)](https://circleci.com/gh/mohitbagde/php-playground)
+
 ## v1.0.0 (08/23/17)
 - Added `composer`, `phpunit` and `Guzzle`
 - Updated repo and the `README.MD` + `.gitignore` files
