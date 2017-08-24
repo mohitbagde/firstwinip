@@ -14,6 +14,8 @@ use InvalidArgumentException;
 class Client
 {
 
+    const EXCEPTION_MESSAGE = 'Error: Endpoint and apiKey must be passed';
+
     /** @var  GuzzleClient $client */
     private $client;
 
@@ -39,13 +41,13 @@ class Client
         $this->handler = $handler ?: HandlerStack::create();
 
         // Ensure endpoint exists
-        if (!(empty($endpoint))
-            || (empty($apiKey))
+        if (!(empty($endpoint)
+            || empty($apiKey))
         ) {
             $this->endpoint = $endpoint;
             $this->apiKey = $apiKey;
         } else {
-            throw new InvalidArgumentException('Error: Check OAuth params');
+            throw new InvalidArgumentException(self::EXCEPTION_MESSAGE);
         }
 
         $this->client = new GuzzleClient([
