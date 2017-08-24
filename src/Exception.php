@@ -9,20 +9,20 @@ use GuzzleHttp\Exception\RequestException;
  */
 class Exception extends \RuntimeException
 {
-	/**
-	 * @param RequestException $e
-	 * @param string $prefix
-	 * @return RequestException|Exception
-	 */
-	public static function fromRequestException(RequestException $e, $prefix)
-	{
-		$response = $e->getResponse();
+    /**
+     * @param RequestException $e
+     * @param string $prefix
+     * @return RequestException|Exception
+     */
+    public static function fromRequestException(RequestException $e, $prefix)
+    {
+        $response = $e->getResponse();
 
-		if ($response === null) {
-			return $e;
-		}
-		//Return the raw error in JSON format
-		$errorMessage = $response->getBody()->getContents();
-		return new static($prefix . $errorMessage, 0, $e);
-	}
+        if ($response === null) {
+            return $e;
+        }
+        //Return the raw error in JSON format
+        $errorMessage = $response->getBody()->getContents();
+        return new static($prefix . $errorMessage, 0, $e);
+    }
 }
