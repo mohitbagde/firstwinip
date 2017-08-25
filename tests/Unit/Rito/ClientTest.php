@@ -13,27 +13,33 @@ use InvalidArgumentException;
 
 class ClientTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var  string $endpoint */
-    private $endpoint = 'http://www.example.com';
-    /**
-     * @var string $apiKey
-     */
-    private $apiKey = 'api-key';
-    /**
-     * @var MockHandler $handler
-     */
+    /** @var  string $accountId */
+    private $accountId;
+
+    /** @var string $apiKey */
+    private $apiKey;
+
+    /** @var string $endpoint */
+    private $endpoint;
+
+    /** @var MockHandler $handler */
     private $handler;
-    /**
-     * @var RiotClient $client
-     */
+
+    /** @var string $summonerName */
+    private $summonerName;
+
+    /** @var RiotClient $client */
     private $client;
 
     public function setUp()
     {
         parent::setUp();
-        $this->handler = new MockHandler();
+        $this->accountId = 123;
         $this->apiKey = 'api-key';
         $this->endpoint = 'http://www.paparito.com';
+        $this->handler = new MockHandler();
+        $this->summonerName = 'dingus';
+
         $this->client = new RiotClient($this->endpoint, $this->apiKey, HandlerStack::create($this->handler));
     }
 
@@ -79,14 +85,11 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function testValidSummonerDataResponse()
     {
-        $summonerName = 'dingus';
         $actualJSONResponse = '{"data":"dunkey-beat-sky-in-smash"}';
-        $this->handler->append(
-            new Response(200, [], $actualJSONResponse)
-        );
-        $summonerData = $this->client->getSummonerData($summonerName);
+        $this->handler->append(new Response(200, [], $actualJSONResponse));
+        $summonerData = $this->client->getSummonerData($this->summonerName);
 
-        $this->assertSame((array) json_decode($actualJSONResponse), $summonerData);
+        $this->assertSame((array)json_decode($actualJSONResponse), $summonerData);
     }
 
     public function providesMockInvalidSummonerData()
@@ -94,30 +97,44 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         return [
             'not-found-data' => [
                 new Response(404, [], false),
-                'carlton-banks',
             ],
             'internal-server-error' => [
                 new Response(500, [], false),
-                'pizza-dog',
             ],
             'unprocessable-entity' => [
                 new Response(422, [], false),
-                'bubber-ducky',
             ],
         ];
     }
 
     /**
      * @dataProvider providesMockInvalidSummonerData
-     * @param Response $response
-     * @param string $summonerName
-     *
+     * @param Response $expectedResponse
      */
-    public function testInvalidSummonerDataResponse($expectedResponse, $summonerName)
+    public function testInvalidSummonerDataResponse($expectedResponse)
     {
         $this->handler->append($expectedResponse);
         $this->expectException(RiotException::class);
 
-        $this->client->getSummonerData($summonerName);
+        $this->client->getSummonerData($this->summonerName);
+    }
+
+    public function providesMockSummonerData()
+    {
+        return [
+            'valid-response' => [
+                456, new Response(200, [], '{"accountId":"456"}')
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providesMockSummonerData
+     * @param $mockSummonerDataResponse
+     */
+    public function testValidAccountId($expectedId, $mockSummonerDataResponse)
+    {
+        $this->handler->append($mockSummonerDataResponse);
+        $this->assertSame($expectedId, $this->client->getAccountId($this->summonerName));
     }
 }

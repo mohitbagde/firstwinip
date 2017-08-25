@@ -88,7 +88,7 @@ class Client
         // Set the path
         $path = new Uri(
             sprintf(
-                '/lol/summoner/v3/summoners/by-name/%s?api_key=',
+                '/lol/summoner/v3/summoners/by-name/%s?api_key=%s',
                 $summonerName,
                 $this->apiKey
             )
@@ -97,8 +97,99 @@ class Client
         // Build the request
         $request = new Request('GET', $path);
 
-        /** @var ResponseInterface $response */
+        /** @var array $response */
         return $this->executeRequest($request);
+    }
+
+    /**
+     * Get a summoner's account Id from their data
+     * @param $summonerName
+     * @return bool|int
+     */
+    public function getAccountId($summonerName)
+    {
+        $summonerData = $this->getSummonerData($summonerName);
+        return isset($summonerData['accountId']) ? (int) $summonerData['accountId'] : false;
+    }
+
+    /**
+     * Get a summoner's match data
+     * @param $accountId
+     *
+     * @return array
+     */
+    public function getMatchHistory($accountId)
+    {
+        $path = new Uri(
+            sprintf(
+                '/lol/match/v3/matchlists/by-account/%s/recent?api_key=%s',
+                $accountId,
+                $this->apiKey
+            )
+        );
+
+        // Build the request
+        $request = new Request('GET', $path);
+
+        /** @var array $response */
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Get a summoner's gameId from their recent matchdata
+     * @param $accountId
+     *
+     * @return bool|string
+     */
+    public function getGameId($accountId)
+    {
+        return $this->getMatchHistory($accountId)['matches'][0]['gameId'] ?: false;
+    }
+    /**
+     * Get the most recent victory
+     * @param $gameId
+     * @return array
+     */
+    public function getMostRecentWinInfo($gameId)
+    {
+        $path = new Uri(
+            sprintf(
+                '/lol/match/v3/matches/%s?api_key=%s',
+                $gameId,
+                $this->apiKey
+            )
+        );
+
+        // Build the request
+        $request = new Request('GET', $path);
+
+        /** @var array $response */
+        $matchInfo = $this->executeRequest($request);
+        $data = [
+            'time' => $matchInfo['gameCreation'] + $matchInfo['gameDuration']
+        ];
+
+        $participantId = false;
+        $allSummonerData = $matchInfo['participantIdentities'];
+        array_filter($allSummonerData, function ($datum) use (&$summonerName, &$participantId) {
+            if (strcasecmp($datum->player->summonerName, $summonerName) == 0) {
+                $participantId = $datum->participantId;
+                return true;
+            }
+            return false;
+        });
+
+        if ($participantId) {
+            array_filter($matchInfo['participants'], function ($datum) use (&$status, &$participantId) {
+                if (strcasecmp($datum->stats->participantId, $participantId) == 0) {
+                    $data['status'] = $datum->stats->win;
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        return $data;
     }
 
     /**
